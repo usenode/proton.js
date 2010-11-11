@@ -11,21 +11,21 @@ Writing a Web Appliction
 
 You could use it to create a web appliction:
 
-  var proton = require('proton/proton');
-  
-  var WebApp = proton.framework(function () {
-       // initialise the webapp here
-  });
-  
-  WebApp.prototype.handle = function (request) {
-      return {
-          status  : 200,
-          headers : { 'Content-Type' : 'text/plain' },
-          body    : "Hello, World\n"
-      };
-  };
-  
-  proton.run(WebApp);
+    var proton = require('proton/proton');
+    
+    var WebApp = proton.framework(function () {
+         // initialise the webapp here
+    });
+    
+    WebApp.prototype.handle = function (request) {
+        return {
+            status  : 200,
+            headers : { 'Content-Type' : 'text/plain' },
+            body    : "Hello, World\n"
+        };
+    };
+    
+    proton.run(WebApp);
 
 Hmmm, maybe there's a reason "proton.framework" isn't called "proton.webapp"...
 
@@ -34,31 +34,31 @@ Writing a Web Framework
 
 However, on its own it isn't very useful for building webapps - it is just a very minimal layer on top of JSGI and node.http. The real power comes when you build (or use) a micro framework on top of Proton:
 
-  var proton = require('proton/proton');
-  
-  var WebApp = exports.WebApp = proton.framework(function (content) {
-       this.content = content;
-  });
-  
-  WebApp.prototype.handle = function (request) {
-      return {
-          status  : 200,
-          headers : { 'Content-Type' : 'text/plain' },
-          body    : this.content[request.url]
-      };
-  };
-  
-  exports.run = proton.run;
+    var proton = require('proton/proton');
+    
+    var WebApp = exports.WebApp = proton.framework(function (content) {
+         this.content = content;
+    });
+    
+    WebApp.prototype.handle = function (request) {
+        return {
+            status  : 200,
+            headers : { 'Content-Type' : 'text/plain' },
+            body    : this.content[request.url]
+        };
+    };
+    
+    exports.run = proton.run;
 
 Users of your new micro framework can then use it like so:
 
-  var myAmazingFramework = require("some/crooner");
-  
-  var webapp = new myAmazingFramework.WebApp({
-      '/' : 'Hello, World'
-  });
-  
-  myAmazingFramework.run(webapp);
+    var myAmazingFramework = require("some/crooner");
+    
+    var webapp = new myAmazingFramework.WebApp({
+        '/' : 'Hello, World'
+    });
+    
+    myAmazingFramework.run(webapp);
 
 Writing a useful micro framework (unlike this one) is left as an exercise for the reader.
 
@@ -103,6 +103,8 @@ Installation
 NPM is recommended for development, although for production you might want to find/build a package for your operating system:
 
     npm install proton
+
+(TODO does not work yet)
 
 Future Work
 ===========
