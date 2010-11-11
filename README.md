@@ -82,10 +82,6 @@ This method takes a constructor function that can be used as prototype for new w
 WebAppContext (this.context in a method on a web appliction)
 ------------------------------------------------------------
 
-### this.context.beforeStart(promise)
-
-The before start takes a promise object (Promised.IO recommended) representing an asynchronous operation that should complete before the server is started (as a result of proton.run being called).
-
 Proton based frameworks have access to an object that represents the context that the web appliction runs in. This is exposed as a "context" property on the instance of the prototype you pass to "proton.framework":
 
     var WebApp = proton.framework(function () {
@@ -96,6 +92,10 @@ Proton based frameworks have access to an object that represents the context tha
     WebApp.prototype.handle = function () {
         // this.context is available here, as well as in other methods on WebApp
     };
+
+### this.context.beforeStart(promise)
+
+The before start takes a promise object (Promised.IO recommended) representing an asynchronous operation that should complete before the server is started (as a result of proton.run being called).
 
 Installation
 ============
