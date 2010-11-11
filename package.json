@@ -1,0 +1,6 @@
+{
+    "name" : "proton",
+    "main" : "proton",
+    "version" : "0.1.0beta",
+    "directories" : { "lib" : "./lib" }
+}
