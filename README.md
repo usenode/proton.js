@@ -11,7 +11,7 @@ Writing a Web Appliction
 
 You could use it to create a web appliction:
 
-    var proton = require('proton/proton');
+    var proton = require('proton');
     
     var WebApp = proton.framework(function () {
          // initialise the webapp here
@@ -34,7 +34,7 @@ Writing a Web Framework
 
 However, on its own it isn't very useful for building webapps - it is just a very minimal layer on top of JSGI and node.http. The real power comes when you build (or use) a micro framework on top of Proton:
 
-    var proton = require('proton/proton');
+    var proton = require('proton');
     
     var WebApp = exports.WebApp = proton.framework(function (content) {
          this.content = content;
