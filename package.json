@@ -1,5 +1,6 @@
 {
     "name"         : "proton",
+    "bin"          : { "proton" : "./bin/proton" },
     "main"         : "./lib/proton",
     "version"      : "0.1.0beta",
     "directories"  : { "lib" : "./lib" },
