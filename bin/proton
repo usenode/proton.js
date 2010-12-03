@@ -3,15 +3,8 @@
 var cli = require('proton/cli'),
     sys = require('sys');
 
+var args = process.argv.slice();
+
 var interface = new cli.Interface(process.cwd(), process.argv, process.env);
 
-//try {
-    interface.run();
-/*}
-catch (e) {
-    if (e instanceof cli.UserError) {
-        sys.error(e.toString());
-        process.exit(1);
-    }
-    throw e;
-}*/
+interface.run();
