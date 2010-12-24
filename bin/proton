@@ -1,4 +1,4 @@
-#!/bin/env node
+#!/usr/bin/env node
 
 var cli = require('proton/cli'),
     sys = require('sys');
