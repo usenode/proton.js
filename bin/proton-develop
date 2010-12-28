@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+var cli = require('proton/develop-cli'),
+    sys = require('sys');
+
+var args = process.argv.slice();
+
+var interface = new cli.Interface(process.cwd(), process.argv, process.env);
+
+interface.run();

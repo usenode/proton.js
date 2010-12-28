@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+  <title>Proton Develop</title>
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript">
+    WebFontConfig = {
+      google: { families: [ 'Droid Sans:regular,bold' ] }
+    };
+    (function() {
+      var wf = document.createElement('script');
+      wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+          '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+      wf.type = 'text/javascript';
+      wf.async = 'true';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wf, s);
+    })();
+    <% this.headScript() %>
+  </script>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+  <div class="outer">
+    <div class="header">
+      <h1>Proton Develop</h1>
+      <div class="strapline">proton development console</div>
+    </div>
+    <div class="content <% this.contentClass() %>"><% next(this) %></div>
+  </div>
+</body>
+</html>
+
+<~method headScript></~method>
+<~method contentClass></~method>
+

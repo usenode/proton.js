@@ -1,0 +1,14 @@
+
+<table class="projects">
+    <tr>
+        <th>Name</th>
+        <th>Location</th>
+    </tr>
+    : var projects = this.args.projects;
+    : for (var i = 0, ilen = projects.length; i < ilen; i++) {
+        <tr>
+            <td><%= projects[i].name %></td>
+            <td><code><%= projects[i].data.dir %></code></td>
+        </tr>
+    : }
+</table>
