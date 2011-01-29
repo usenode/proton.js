@@ -1,8 +1,10 @@
 {
     "name"         : "proton",
+    "version"      : "0.1.0",
+    "engines"      : [ "node >=0.2.5" ],
+    "author"       : "Tom Yandell <tom.deletethis@yandell.me.uk> (http://tomyandell.wordpress.com/)",
     "bin"          : { "proton" : "./bin/proton", "proton-develop" : "./bin/proton-develop" },
     "main"         : "./lib/proton",
-    "version"      : "0.1.0",
     "directories"  : { "lib" : "./lib" },
     "dependencies" : {
         "jsgi"        : ">=0.2.2",
