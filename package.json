@@ -1,6 +1,6 @@
 {
     "name"         : "proton",
-    "version"      : "0.1.0",
+    "version"      : "0.1.2",
     "engines"      : [ "node >=0.2.5" ],
     "author"       : "Tom Yandell <tom.deletethis@yandell.me.uk> (http://tomyandell.wordpress.com/)",
     "bin"          : { "proton" : "./bin/proton", "proton-develop" : "./bin/proton-develop" },
