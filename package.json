@@ -2,7 +2,7 @@
     "name"         : "proton",
     "bin"          : { "proton" : "./bin/proton", "proton-develop" : "./bin/proton-develop" },
     "main"         : "./lib/proton",
-    "version"      : "0.1.0beta",
+    "version"      : "0.1.0",
     "directories"  : { "lib" : "./lib" },
     "dependencies" : {
         "jsgi"        : ">=0.2.2",
