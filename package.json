@@ -4,7 +4,7 @@
     "version"      : "0.2.0",
     "engines"      : [ "node >=0.2.5" ],
     "author"       : "Tom Yandell <tom.deletethis@yandell.me.uk> (http://tom.yandell.me.uk/blog/)",
-    "bin"          : { "proton" : "./bin/proton", "proton-develop" : "./bin/proton-develop" },
+    "bin"          : { "proton" : "./bin/proton"  },
     "main"         : "./lib/proton",
     "directories"  : { "lib" : "./lib" },
     "dependencies" : {
