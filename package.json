@@ -1,7 +1,7 @@
 {
     "name"         : "proton",
     "description"  : "Proton is a micro framework targetted at micro frameworks. It provides a common way for micro-frameworks to interoporate with the environment that runs them.",
-    "version"      : "0.4.0",
+    "version"      : "0.4.1",
     "engines"      : [ "node >=0.4.0" ],
     "author"       : "Tom Yandell <tom.deletethis@yandell.me.uk> (http://tom.yandell.me.uk/blog/)",
     "contributors" : [
