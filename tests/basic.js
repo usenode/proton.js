@@ -5,7 +5,7 @@ var litmus = require('litmus'),
 exports.test = new litmus.Test('basic proton tests', function () {
     var test = this;
 
-    test.plan(9);
+    test.plan(11);
 
     test.is(typeof proton, 'object', 'proton namespace is an object');
 
@@ -36,6 +36,10 @@ exports.test = new litmus.Test('basic proton tests', function () {
                     }
                 };
             }
+        });
+
+        server.setDaemoniser(function (pidfile, uid, gid, logfile) {
+            events.push(['daemoniser called', pidfile, uid, gid, logfile]);
         });
 
         test.async(name, function (handle) {
@@ -96,4 +100,24 @@ exports.test = new litmus.Test('basic proton tests', function () {
         '127.0.0.1:81',
         'server bound to specific ip address and port'
     ); 
+
+    testProton(
+        {
+            daemonise: true,
+            pidfile:   '/a/pid/file',
+            uid:       10,
+            gid:       11,
+            logdir:    '/a/log/dir'
+        },
+        [
+            ['daemoniser called', '/a/pid/file', 10, 11, '/a/log/dir'],
+            'instantiated',
+            'create server called',
+            [ 'listen called', 80, '0.0.0.0' ],
+            'handle called for req res'
+        ],
+        '0.0.0.0:80',
+        'daemonise'
+    );
+
 });
