@@ -1,4 +1,10 @@
 
+node_modules/.bin/litmus:
+	npm install litmus
+
+test: node_modules/.bin/litmus
+	./node_modules/.bin/litmus ./tests/suite.js
+
 publish: 
 	perl -e '`git status` =~ /working directory clean/ or die "cannot publish without clean working dir\n"' && \
 	echo current version is `perl -ne 'print /"version"\s*:\s*"(\d+\.\d+\.\d+)"/' package.json` && \

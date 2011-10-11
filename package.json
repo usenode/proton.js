@@ -8,7 +8,7 @@
         "Richard Hodgson <contact@rhodgson.co.uk>"
     ],
     "bin"          : { "proton" : "./bin/proton"  },
-    "main"         : "./lib/proton",
+    "main"         : "./lib/proton.js",
     "directories"  : { "lib" : "./lib" },
     "dependencies" : {
         "jsgi"        : ">=0.2.2",
