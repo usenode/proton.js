@@ -1,11 +1,12 @@
 
-var litmus = require('litmus'),
-    proton = require('..');
+var litmus  = require('litmus'),
+    proton  = require('..'),
+    promise = require('promised-io/lib/promise');
 
 exports.test = new litmus.Test('basic proton tests', function () {
     var test = this;
 
-    test.plan(11);
+    test.plan(13);
 
     test.is(typeof proton, 'object', 'proton namespace is an object');
 
@@ -19,6 +20,10 @@ exports.test = new litmus.Test('basic proton tests', function () {
         Mock.prototype.handle = function (request, response) {
             events.push('handle called for ' + request + ' ' + response);
         };
+
+        if (options.setupMock) {
+            options.setupMock(Mock, events);
+        }
 
         var server = new proton.Server(Mock, options.options),
             fireRequest;
@@ -114,4 +119,28 @@ exports.test = new litmus.Test('basic proton tests', function () {
         ],
         startCallbackParameter: '0.0.0.0:80'
     }, 'daemonise');
+
+    testProton({
+        options: {},
+        events: [
+            'instantiated',
+            'create server called',
+            'onBeforeStart called',
+            'onBeforeStart promise waited for',
+            [ 'listen called', 80, '0.0.0.0' ],
+            'handle called for req res'
+        ],
+        startCallbackParameter: '0.0.0.0:80',
+        setupMock: function (Mock, events) {
+            Mock.prototype.onBeforeStart = function () {
+                events.push('onBeforeStart called');
+                var done = new promise.Promise();
+                process.nextTick(function () {
+                    events.push('onBeforeStart promise waited for');
+                    done.resolve();
+                });
+                return done;
+            };
+        }
+    }, 'onBeforeStart');
 });
