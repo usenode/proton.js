@@ -9,7 +9,7 @@ exports.test = new litmus.Test('basic proton tests', function () {
 
     test.is(typeof proton, 'object', 'proton namespace is an object');
 
-    function testProton (options, expectedEvents, expectedListenAddress, name) {
+    function testProton (options, name) {
         var events = [];
 
         var Mock = function () {
@@ -20,7 +20,7 @@ exports.test = new litmus.Test('basic proton tests', function () {
             events.push('handle called for ' + request + ' ' + response);
         };
 
-        var server = new proton.Server(Mock, options),
+        var server = new proton.Server(Mock, options.options),
             fireRequest;
 
         server.setHttpModule({
@@ -45,79 +45,73 @@ exports.test = new litmus.Test('basic proton tests', function () {
         test.async(name, function (handle) {
             server.start().then(function (listenAddress) {
                 fireRequest('req', 'res');
-                test.is(events, expectedEvents, name);
-                test.is(listenAddress, expectedListenAddress, name + ' listen address');
+                test.is(events, options.events, name);
+                test.is(listenAddress, options.startCallbackParameter, name + ' listen address');
                 handle.finish();
             });
         });
         
     };
 
-    testProton(
-        {},
-        [
+    testProton({
+        options: {},
+        events: [
             'instantiated',
             'create server called',
             [ 'listen called', 80, '0.0.0.0' ],
             'handle called for req res'
         ],
-        '0.0.0.0:80',
-        'basic server'
-    );
+        startCallbackParameter: '0.0.0.0:80'
+    }, 'basic server');
 
-    testProton(
-        { port: 81 },
-        [
+    testProton({
+        options: { port: 81 },
+        events: [
             'instantiated',
             'create server called',
             [ 'listen called', 81, '0.0.0.0' ],
             'handle called for req res'
         ],
-        '0.0.0.0:81',
-        'server on different port'
-    );
+        startCallbackParameter: '0.0.0.0:81'
+    }, 'server on different port');
 
-    testProton(
-        { bindTo: '127.0.0.1' },
-        [
+    testProton({
+        options: { bindTo: '127.0.0.1' },
+        events: [
             'instantiated',
             'create server called',
             [ 'listen called', 80, '127.0.0.1' ],
             'handle called for req res'
         ],
-        '127.0.0.1:80',
-        'server bound to specific ip address'
-    ); 
+        startCallbackParameter: '127.0.0.1:80'
+    }, 'server bound to specific ip address'); 
 
-    testProton(
-        { bindTo: '127.0.0.1', port: 81 },
-        [
+    testProton({
+        options: { bindTo: '127.0.0.1', port: 81 },
+        events: [
             'instantiated',
             'create server called',
             [ 'listen called', 81, '127.0.0.1' ],
             'handle called for req res'
         ],
-        '127.0.0.1:81',
-        'server bound to specific ip address and port'
-    ); 
+        startCallbackParameter: '127.0.0.1:81'
+    }, 'server bound to specific ip address and port'); 
 
-    testProton(
-        {
+    testProton({
+        options: {
             daemonise: true,
             pidfile:   '/a/pid/file',
             uid:       10,
             gid:       11,
             logdir:    '/a/log/dir'
         },
-        [
+        events: [
             ['daemoniser called', '/a/pid/file', 10, 11, '/a/log/dir'],
             'instantiated',
             'create server called',
             [ 'listen called', 80, '0.0.0.0' ],
             'handle called for req res'
         ],
-        '0.0.0.0:80',
-        'daemonise'
-    );
-
+        startCallbackParameter: '0.0.0.0:80'
+    }, 'daemonise');
 });
