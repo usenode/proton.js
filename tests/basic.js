@@ -43,8 +43,10 @@ exports.test = new litmus.Test('basic proton tests', function () {
             }
         });
 
-        server.setDaemoniser(function (pidfile, uid, gid, logfile) {
-            events.push(['daemoniser called', pidfile, uid, gid, logfile]);
+        server.setDaemonModule({
+            daemonise: function (pidfile, uid, gid, logfile) {
+                events.push(['daemoniser called', pidfile, uid, gid, logfile]);
+            }
         });
 
         test.async(name, function (handle) {
