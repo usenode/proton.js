@@ -13,7 +13,8 @@
     "dependencies" : {
         "jsgi"        : ">=0.2.2",
         "promised-io" : ">=0.2.1",
-        "daemon"      : ">=0.1.0"
+        "daemon"      : ">=0.1.0",
+        "temp"        : ">=0.2.0"
     },
     "repository" : {
         "type" : "git",
