@@ -1,8 +1,8 @@
 
-node_modules/.bin/litmus:
-	npm install litmus
+node_modules: package.json
+	npm install
 
-test: node_modules/.bin/litmus
+test: node_modules
 	./node_modules/.bin/litmus ./tests/suite.js
 
 publish: 
@@ -16,4 +16,7 @@ publish:
 	git push origin master && \
 	git push --tags && \
 	npm publish https://github.com/tomyan/proton.js/tarball/v$$new_version
+
+clean:
+	rm -rf node_modules
 
