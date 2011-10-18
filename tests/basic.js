@@ -1,7 +1,7 @@
 
 var litmus  = require('litmus'),
     proton  = require('..'),
-    promise = require('promised-io/lib/promise');
+    promise = require('promised-io/promise');
 
 exports.test = new litmus.Test('basic proton tests', function () {
     var test = this;
@@ -44,8 +44,9 @@ exports.test = new litmus.Test('basic proton tests', function () {
         });
 
         server.setDaemonModule({
-            daemonise: function (pidfile, uid, gid, logfile) {
-                events.push(['daemoniser called', pidfile, uid, gid, logfile]);
+            daemonize: function (handles, pidfile, callback) {
+                events.push(['daemoniser called', handles, pidfile, typeof callback]);
+                callback();
             }
         });
 
@@ -113,9 +114,9 @@ exports.test = new litmus.Test('basic proton tests', function () {
             logdir:    '/a/log/dir'
         },
         events: [
-            ['daemoniser called', '/a/pid/file', 10, 11, '/a/log/dir'],
             'instantiated',
             'create server called',
+            ['daemoniser called', { stdout: '/a/log/dir/log', stderr: '/a/log/dir/errors' }, '/a/pid/file', 'function'],
             [ 'listen called', 80, '0.0.0.0' ],
             'handle called for req res'
         ],
