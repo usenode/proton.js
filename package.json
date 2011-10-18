@@ -11,8 +11,8 @@
     "main"         : "./lib/proton.js",
     "directories"  : { "lib" : "./lib" },
     "dependencies" : {
-        "jsgi"        : ">=0.2.2",
-        "promised-io" : ">=0.2.1",
+        "litmus"      : ">=0.3.1",
+        "promised-io" : ">=0.2.3",
         "daemon"      : ">=0.1.0",
         "temp"        : ">=0.2.0"
     },
