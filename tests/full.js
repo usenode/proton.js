@@ -5,19 +5,13 @@ var litmus        = require('litmus'),
     http          = require('http'),
     child_process = require('child_process'),
     promise       = require('promised-io/promise'),
-    fs            = require('fs');
+    fs            = require('fs'),
+    delay         = require('promised-io/delay').delay;
 
 exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.', function () {
     var test = this;
 
-    test.plan(3);
-
-    var WebApp = function () {};
-
-    WebApp.prototype.handle = function (request, response) {
-        response.writeHead(200, { 'Content-Type': 'text/plain' });
-        response.end('hello ' + request.url);
-    };
+    test.plan(14);
 
     function makeServerOptions (options) {
         if (! options) {
@@ -32,17 +26,18 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
     }
     
     function makeServer (proton, options) {
-        return new proton.Server(WebApp, makeServerOptions(options));
+        return new proton.Server(__dirname + '/webapp', makeServerOptions(options));
     }
 
-    function get (address, path) {
+    function get (address, path, agent) {
         var done = new promise.Promise,
             host = address.split(':')[0],
             port = address.split(':')[1];
         http.get({
             host: host,
             port: port,
-            path: path
+            path: path,
+            agent: agent
         }, function (response) {
             var content = '';
             response.on('data', function (data) {
@@ -59,7 +54,7 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
         var server = makeServer(proton);
         server.start().then(function (boundTo) {
             get(boundTo, '/world').then(function (content) {
-                test.is(content, 'hello /world', 'handled http request');
+                test.like(content, /url: \/world/, 'handled http request');
             }).then(function () {
                 server.stop();
                 handle.finish();
@@ -81,7 +76,7 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
             }));
             waitForServerStart(tempdir + '/log').then(function (boundTo) {
                 get(boundTo, '/hello').then(function (response) {
-                    var match = response.match(/Hello from (\d+) \(\/hello\)/);
+                    var match = response.match(/url: \/hello\npid: (\d+)/);
                     test.ok(match, 'got response from daemonised server');
                     test.is(fs.readFileSync(pidfile, 'utf-8'), match[1], 'pidfile written');
                     get(boundTo, '/stop').then(function () {
@@ -91,7 +86,59 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
             });
         });
     });
+
+    test.async('reload', function (handle) {
+        var server = makeServer(proton, { reload: true });
+        server.start().then(function (address) {
+            var agent   = new http.Agent,
+                created = [];
+
+            function makeRequests () {
+                var requests = [],
+                    done     = promise.Promise();;
+                for (var i = 0; i < 10; i++) {
+                    requests.push(get(address, '/hello', agent));
+                }
+                
+                promise.all(requests).then(function (responses) {
+                    created.push(responses.map(function (response) {
+                        return response.match(/created at: (\d+)/)[1];
+                    }));
+                    done.resolve();
+                });
+                return done;
+            }
+
+            makeRequests().then(function () {
+                test.is(created[0].length, 10, 'initial set of responses received');
+                test.like(created[0][0], /^[1-9]\d*$/, 'initial created is integer greater than zero');
+                test.is(created[0], times(created[0][0], 10), 'all initial requests handled by webapp created at same time');
+                return delay(1000).then(makeRequests);
+            }).then(function () {
+                test.is(created[1].length, 10, 'second set of responses received');
+                test.like(created[1][0], /^[1-9]\d*$/, 'second created is integer greater than zero');
+                test.is(created[1][0], created[0][0], 'second created time same as initial');
+                test.is(created[1], times(created[1][0], 10), 'all second requests handled by webapp created at same time');
+                return delay(3000).then(makeRequests);
+            }).then(function () {
+                test.is(created[2].length, 10, 'third set of responses received');
+                test.like(created[2][0], /^[1-9]\d*$/, 'third created is integer greater than zero');
+                test.gt(created[2][0], created[1][0], 'third created time after initial');
+                test.is(created[1], times(created[1][0], 10), 'all third requests handled by webapp created at same time');
+                server.stop();
+                handle.finish();
+            });
+        }); 
+    }, 10);
 });
+
+function times (d, times) {
+    var expect = [];
+    for (var i = 0; i < times; i++) {
+        expect.push(d);
+    }
+    return expect;
+}
 
 function waitForServerStart (logfile) {
     var done = new promise.Promise(),
@@ -126,17 +173,7 @@ if (process.argv[1] === __filename) {
     }, 10000);
 
     process.on('message', function (options) {
-        var WebApp = function () {},
-            server = new proton.Server(WebApp, options);
-
-        WebApp.prototype.handle = function (request, response) {
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.end('Hello from ' + process.pid + ' (' + request.url + ')'); 
-            if (request.url === '/stop') {
-                server.stop();
-                process.exit(0);
-            }
-        };
+        var server = new proton.Server(__dirname + '/webapp', options);
 
         server.start().then(function (boundTo) {
             // this goes into the log, to be read by the other side
