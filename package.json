@@ -13,7 +13,7 @@
     "dependencies" : {
         "litmus"      : ">=0.3.1",
         "promised-io" : ">=0.2.3",
-        "daemon"      : ">=0.1.0",
+        "daemon"      : ">=0.4.0",
         "temp"        : ">=0.2.0"
     },
     "repository" : {
