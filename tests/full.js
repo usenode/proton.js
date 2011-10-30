@@ -50,19 +50,19 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
         return done;
     }
 
-    test.async('run server', function (handle) {
+    test.async('run server', function (done) {
         var server = makeServer(proton);
         server.start().then(function (boundTo) {
             get(boundTo, '/world').then(function (content) {
                 test.like(content, /url: \/world/, 'handled http request');
             }).then(function () {
                 server.stop();
-                handle.finish();
+                done.resolve();
             });
         });
     });
 
-    test.async('daemonise', function (handle) {
+    test.async('daemonise', function (done) {
         temp.mkdir('proton-test-daemonise', function (err, tempdir) {
             if (err) {
                 throw err;
@@ -80,14 +80,14 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
                     test.ok(match, 'got response from daemonised server');
                     test.is(fs.readFileSync(pidfile, 'utf-8'), match[1], 'pidfile written');
                     get(boundTo, '/stop').then(function () {
-                        handle.finish();
+                        done.resolve();
                     });
                 });
             });
         });
     });
 
-    test.async('reload', function (handle) {
+    test.async('reload', { timeout: 10000 }, function (done) {
         var server = makeServer(proton, { reload: true });
         server.start().then(function (address) {
             var agent   = new http.Agent,
@@ -126,10 +126,10 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
                 test.gt(created[2][0], created[1][0], 'third created time after initial');
                 test.is(created[1], times(created[1][0], 10), 'all third requests handled by webapp created at same time');
                 server.stop();
-                handle.finish();
+                done.resolve();
             });
         }); 
-    }, 10);
+    });
 });
 
 function times (d, times) {

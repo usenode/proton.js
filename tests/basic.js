@@ -37,12 +37,12 @@ exports.test = new litmus.Test('basic proton tests', function () {
             }
         });
 
-        test.async(name, function (handle) {
+        test.async(name, function (done) {
             server.start().then(function (listenAddress) {
                 fireRequest('req', 'res');
                 test.is(server.webapp.events, options.events, name);
                 test.is(listenAddress, options.startCallbackParameter, name + ' listen address');
-                handle.finish();
+                done.resolve();
             });
         });
         
