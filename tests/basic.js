@@ -49,7 +49,7 @@ exports.test = new litmus.Test('basic proton tests', function () {
     };
 
     testProton({
-        options: {},
+        options: { single: true },
         events: [
             'instantiated',
             'create server called',
@@ -62,7 +62,7 @@ exports.test = new litmus.Test('basic proton tests', function () {
     }, 'basic server');
 
     testProton({
-        options: { port: 81 },
+        options: { single: true, port: 81 },
         events: [
             'instantiated',
             'create server called',
@@ -75,7 +75,7 @@ exports.test = new litmus.Test('basic proton tests', function () {
     }, 'server on different port');
 
     testProton({
-        options: { bindTo: '127.0.0.1' },
+        options: { single: true, bindTo: '127.0.0.1' },
         events: [
             'instantiated',
             'create server called',
@@ -88,7 +88,7 @@ exports.test = new litmus.Test('basic proton tests', function () {
     }, 'server bound to specific ip address'); 
 
     testProton({
-        options: { bindTo: '127.0.0.1', port: 81 },
+        options: { single: true, bindTo: '127.0.0.1', port: 81 },
         events: [
             'instantiated',
             'create server called',
@@ -102,6 +102,7 @@ exports.test = new litmus.Test('basic proton tests', function () {
 
     testProton({
         options: {
+            single:    true,
             daemonise: true,
             pidfile:   '/a/pid/file',
             uid:       10,

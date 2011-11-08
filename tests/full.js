@@ -46,23 +46,34 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
             response.on('end', function () {
                 done.resolve(content);
             });
+        }).on('error', function(e) {
+            done.reject('could not get http://' + address + path + ' - ' + e);
         });
         return done;
     }
 
-    test.async('run server', function (done) {
+    test.async('run server', { timeout: 1000 }, function (done) {
         var server = makeServer(proton);
         server.start().then(function (boundTo) {
+            done.then(function () {
+                server.stop();
+            }, function () {
+                server.stop();
+            });
+
+            //setTimeout(function () {
             get(boundTo, '/world').then(function (content) {
                 test.like(content, /url: \/world/, 'handled http request');
             }).then(function () {
-                server.stop();
                 done.resolve();
+            }, function (err) {
+                done.reject(err);
             });
+            //}, 100);
         });
     });
 
-    test.async('daemonise', function (done) {
+    test.async('daemonise', { "timeout" : 100000 }, function (done) {
         temp.mkdir('proton-test-daemonise', function (err, tempdir) {
             if (err) {
                 throw err;
@@ -74,18 +85,21 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
                 pidfile:   pidfile,
                 logdir:    tempdir
             }));
+            console.log(tempdir);
             waitForServerStart(tempdir + '/log').then(function (boundTo) {
+                console.log('server started');
                 get(boundTo, '/hello').then(function (response) {
                     var match = response.match(/url: \/hello\npid: (\d+)/);
                     test.ok(match, 'got response from daemonised server');
                     test.is(fs.readFileSync(pidfile, 'utf-8'), match[1], 'pidfile written');
-                    get(boundTo, '/stop').then(function () {
+                    process.kill();
                         done.resolve();
-                    });
                 });
             });
         });
     });
+
+    return;
 
     test.async('reload', { timeout: 10000 }, function (done) {
         var server = makeServer(proton, { reload: true });
@@ -94,8 +108,8 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
                 created = [];
 
             function makeRequests () {
-                var requests = [],
-                    done     = promise.Promise();;
+                var requests     = [],
+                    requestsMade = promise.Promise();;
                 for (var i = 0; i < 10; i++) {
                     requests.push(get(address, '/hello', agent));
                 }
@@ -104,9 +118,9 @@ exports.test = new litmus.Test('tests that run actual servers, daemonise, etc.',
                     created.push(responses.map(function (response) {
                         return response.match(/created at: (\d+)/)[1];
                     }));
-                    done.resolve();
+                    requestsMade.resolve();
                 });
-                return done;
+                return requestsMade;
             }
 
             makeRequests().then(function () {
