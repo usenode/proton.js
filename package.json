@@ -15,6 +15,9 @@
         "promised-io" : ">=0.3.0",
         "daemon"      : ">=0.1.0"
     },
+    "devDependencies" : {
+        "usenode-release": ">=1.0.0"
+    },
     "repository" : {
         "type" : "git",
         "url"  : "http://github.com/tomyan/proton.js.git"
