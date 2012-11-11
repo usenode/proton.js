@@ -1,7 +1,7 @@
 {
     "name"         : "proton",
     "description"  : "Proton is a tool for developing and running web applications.",
-    "version"      : "0.4.1",
+    "version"      : "0.5.0",
     "engines"      : [ "node >=0.4.0" ],
     "author"       : "Tom Yandell <tom.deletethis@yandell.me.uk> (http://tom.yandell.me.uk/blog/)",
     "contributors" : [
