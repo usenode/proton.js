@@ -1,6 +1,6 @@
 {
     "name"         : "proton",
-    "description"  : "Proton is a micro framework targetted at micro frameworks. It provides a common way for micro-frameworks to interoporate with the environment that runs them.",
+    "description"  : "Proton is a tool for developing and running web applications.",
     "version"      : "0.4.1",
     "engines"      : [ "node >=0.4.0" ],
     "author"       : "Tom Yandell <tom.deletethis@yandell.me.uk> (http://tom.yandell.me.uk/blog/)",
@@ -20,8 +20,8 @@
     },
     "repository" : {
         "type" : "git",
-        "url"  : "http://github.com/tomyan/proton.js.git"
+        "url"  : "http://github.com/usenode/proton.js.git"
     },
-    "homepage" : "http://github.com/tomyan/proton.js"
+    "homepage" : "http://github.com/usenode/proton.js"
 }
 
