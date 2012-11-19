@@ -11,9 +11,7 @@
     "main"         : "./lib/proton",
     "directories"  : { "lib" : "./lib" },
     "dependencies" : {
-        "jsgi"        : ">=0.2.2",
-        "promised-io" : ">=0.3.0",
-        "daemon"      : ">=0.1.0"
+        "promised-io" : ">=0.3.0"
     },
     "devDependencies" : {
         "usenode-release": ">=1.0.0"
