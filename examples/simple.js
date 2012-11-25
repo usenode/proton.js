@@ -11,4 +11,3 @@ module.exports.prototype.handle = function (request, response) {
       'pid:     ' + process.pid + '\n'
     );
 };
-
